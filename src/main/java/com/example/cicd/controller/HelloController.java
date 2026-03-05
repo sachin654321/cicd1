@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.cicd.entity.WeatherHistory;
 import com.example.cicd.service.WeatherService;
 
 
@@ -20,8 +21,8 @@ public class HelloController {
 	}
 	
 	
-	  @GetMapping("/weather")
-	    public String getWeather(@RequestParam String city){
+	 @GetMapping("/weather")
+	    public WeatherHistory getWeather(@RequestParam String city) {
 	        return weatherService.getWeatherByCity(city);
 	    }
 
