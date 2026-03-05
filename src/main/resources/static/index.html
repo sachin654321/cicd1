@@ -1,94 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Weather App</title>
-
-<style>
-
-body{
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.container{
-    background:white;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.2);
-    text-align:center;
-    width:350px;
-}
-
-h2{
-    color:#333;
-}
-
-input{
-    padding:10px;
-    width:70%;
-    border-radius:5px;
-    border:1px solid #ccc;
-    margin-top:10px;
-}
-
-button{
-    padding:10px 15px;
-    margin-top:10px;
-    border:none;
-    background:#4facfe;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-button:hover{
-    background:#00c6ff;
-}
-
-#result{
-    margin-top:20px;
-    text-align:left;
-    background:#f4f4f4;
-    padding:10px;
-    border-radius:5px;
-}
-
-</style>
+  <title>Weather App</title>
 </head>
 
 <body>
 
-<div class="container">
+<h2>Weather Search</h2>
 
-<h2>🌤 Weather Search</h2>
+<input type="text" id="city" placeholder="Enter city">
+<button onclick="getWeather()">Search</button>
 
-<input type="text" id="city" placeholder="Enter city name">
+<h3>Current Result</h3>
+<p id="result"></p>
 
-<br>
-
-<button onclick="getWeather()">Get Weather</button>
-
-<pre id="result"></pre>
-
-</div>
+<h3>Search History</h3>
+<ul id="history"></ul>
 
 <script>
 
-function getWeather(){
+// Array to store history
+let history = [];
 
-const city = document.getElementById("city").value;
+function getWeather() {
+  let city = document.getElementById("city").value;
 
-fetch("/weather?city="+city)
-.then(response => response.text())
-.then(data=>{
-document.getElementById("result").innerText=data;
-});
+  if (!city) {
+    alert("Please enter a city name");
+    return;
+  }
 
+  fetch("/weather?city=" + city)
+    .then(response => response.json())
+    .then(data => {
+      
+      // Display current weather
+      document.getElementById("result").innerHTML =
+        "City: " + data.city + "<br>" +
+        "Temperature: " + data.temperature + " °C<br>" +
+        "Humidity: " + data.humidity + "%<br>" +
+        "Weather: " + data.description + "<br>" +
+        "Wind Speed: " + data.windSpeed;
+
+      // Add to history array
+      history.push(data);
+
+      // Update history list on UI
+      displayHistory();
+    })
+    .catch(error => {
+      alert("Error fetching weather data");
+      console.error(error);
+    });
+}
+
+function displayHistory() {
+  let historyList = document.getElementById("history");
+  historyList.innerHTML = ""; // clear previous history
+
+  // Append each entry
+  history.forEach(item => {
+    let li = document.createElement("li");
+    li.innerHTML =
+      "City: " + item.city +
+      ", Temp: " + item.temperature + " °C" +
+      ", Weather: " + item.description;
+    historyList.appendChild(li);
+  });
 }
 
 </script>
