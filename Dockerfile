@@ -10,4 +10,8 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
+<<<<<<< HEAD
 CMD ["java", "-jar", "app.jar"]
+=======
+CMD ["java", "-jar", "app.jar"]
+>>>>>>> feature/weather-api
