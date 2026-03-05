@@ -19,16 +19,10 @@ public class HelloController {
 		this.weatherService=weatherService;
 	}
 	
-	@GetMapping("/")
-	public String hello()
-	{
-		return "Java Microservice running";
-	}
 	
-	@GetMapping("/weather")
-	public String getWeather(@RequestParam double lat,@RequestParam double lon)
-	{
-		return weatherService.getWeather(lat,lon);
-	}
+	  @GetMapping("/weather")
+	    public String getWeather(@RequestParam String city){
+	        return weatherService.getWeatherByCity(city);
+	    }
 
 }
