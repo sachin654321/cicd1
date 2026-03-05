@@ -32,14 +32,24 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            echo "Stopping all containers using port 80..."
-            docker ps -q --filter "publish=80" | xargs -r docker stop
+            echo "Creating Docker network..."
+            docker network create weather-net || true
 
-            echo "Removing old container..."
-            docker rm cicd1-container || true
+            echo "Stopping old containers..."
+            docker rm -f cicd1-container || true
+            docker rm -f mysql-db || true
 
-            echo "Pulling latest image..."
-            docker pull sachin654321/cicd1:latest
+            echo "Starting MySQL container..."
+            docker run -d \
+              --name mysql-db \
+              --network weather-net \
+              -e MYSQL_ROOT_PASSWORD=rootpassword \
+              -e MYSQL_DATABASE=weatherdb \
+              mysql:8
 
-            echo "Starting container..."
-            docker run -d --name cicd1-container -p 80:8080 sachin654321/cicd1:latest
+            echo "Starting Spring Boot container..."
+            docker run -d \
+              --name cicd1-container \
+              --network weather-net \
+              -p 80:8080 \
+              sachin654321/cicd1:latest
