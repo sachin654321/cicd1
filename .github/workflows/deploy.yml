@@ -9,7 +9,6 @@ jobs:
 build-deploy:
 runs-on: ubuntu-latest
 
-```
 steps:
 
   # 1️⃣ Checkout source code
@@ -74,4 +73,3 @@ steps:
           sachin654321/cicd1:latest
 
         echo "Deployment completed"
-```
